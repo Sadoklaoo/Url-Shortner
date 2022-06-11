@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import * as bcrypt from "bcrypt";
 export interface IUser {
-  name: string;
+  email: string;
+  password: string;
 }
 
 export interface IUserModel extends IUser, Document {}
