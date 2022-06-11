@@ -1,16 +1,16 @@
-import { Request, Response } from "express";
-
-
+import { Request, Response, NextFunction } from "express";
 
 class UriController {
+  static shorten = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {};
 
-
-  static shorten = async (req: Request, res: Response) => {
-    res.render('shorten')
-  };
-
-  
-
- 
+  static redirect = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {};
 }
 export default UriController;
