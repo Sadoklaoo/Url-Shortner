@@ -24,10 +24,20 @@ class UrlController {
     );
   };
 
-  static redirect = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {};
+  static redirect = async (req: Request, res: Response, next: NextFunction) => {
+    // Get shortURL
+    const shortURL = req.params.shortURL;
+
+    // look for user by shortUrl in Database
+    url.findOne({ short: shortURL }).then((URL) => {
+      // check if url is not empty
+      if (URL != null) {
+        //redirect
+        res.redirect(URL["full"]);
+      } else {
+        return res.status(404).json({ message: "Unknown URL" });
+      }
+    });
+  };
 }
 export default UrlController;
