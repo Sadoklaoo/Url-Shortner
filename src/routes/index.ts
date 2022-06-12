@@ -1,5 +1,5 @@
-import { Router, Request, Response } from "express";
-import uri from "./uri";
+import { Router } from "express";
+import url from "./url";
 import user from "./user";
 
 const routes = Router();
@@ -8,6 +8,6 @@ const routes = Router();
 routes.use("/users", user);
 
 // Uri Routes
-routes.use("/uri", uri);
+routes.use("/url", url);
 
 export default routes;
