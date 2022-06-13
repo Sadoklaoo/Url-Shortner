@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { Request, Response } from "express";
-import user from "../models/user";
+import {User} from "../models/user";
 import * as bcrypt from "bcrypt";
 class UserController {
   static login = async (req: Request, res: Response) => {
@@ -8,11 +8,11 @@ class UserController {
     const { email, password } = req.body;
 
     // look for user by email in Database
-    user.findOne({ email: email }).then((User) => {
+    User.findOne({ email: email }).then((user) => {
       // check if user is not empty
-      if (User != null) {
+      if (user != null) {
         // compare crypted password
-        bcrypt.compare(password, User["password"], function (err, result) {
+        bcrypt.compare(password, user["password"], function (err, result) {
           if (err) {
             //Error occured
             return res.status(500).json({ message: "Server Error" });
@@ -36,7 +36,7 @@ class UserController {
     const { email, password } = req.body;
 
     //new user created
-    const User = new user({
+    const user = new User({
       _id: new mongoose.Types.ObjectId(),
       email: email,
       password: password,
@@ -44,7 +44,7 @@ class UserController {
 
     //save to database
     return (
-      User.save()
+      user.save()
         .then((User) => res.status(201).json({ User }))
 
         //error occured

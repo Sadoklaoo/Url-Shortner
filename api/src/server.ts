@@ -5,32 +5,33 @@ import mongoose from "mongoose";
 import { config } from "./config/config";
 import Logging from "./library/Logging";
 
-// Connect mongoose
-mongoose.Promise = global.Promise;
-mongoose
-  .connect(config.mongo.url, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000,
-    useFindAndModify: false,
-  })
-  .then(() => {
-    Logging.info("Database Connected");
-    startServer();
-  })
-  .catch((error) => {
-    Logging.error("Unable to connect : ");
-    Logging.error(error);
-  });
+  // Create a new express application instance
+  export const App = express();
+  // Connect mongoose
+  mongoose.Promise = global.Promise;
+  mongoose
+    .connect(config.mongo.url, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+    })
+    .then(async () => {
+      Logging.info("Database Connected");
+     await startServer();
+      App.emit("appStarted");
+    })
+    .catch((error) => {
+      Logging.error("Unable to connect : ");
+      Logging.error(error);
+    });
+
 
 /** Only Start Server if Mongoose Connects */
-export default function startServer() {
-  // Create a new express application instance
-  const app = express();
+function startServer() {
 
   /** Log the request */
-  app.use((req, res, next) => {
+  App.use((req, res, next) => {
     /** Log the req */
     Logging.info(
       `Incomming - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`
@@ -46,11 +47,11 @@ export default function startServer() {
     next();
   });
 
-  app.use(express.urlencoded({ extended: true }));
-  app.use(express.json());
+  App.use(express.urlencoded({ extended: true }));
+  App.use(express.json());
 
   /** Rules of our API */
-  app.use((req, res, next) => {
+  App.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
       "Access-Control-Allow-Headers",
@@ -69,10 +70,10 @@ export default function startServer() {
   });
 
   /** Set all routes from routes folder **/
-  app.use("/", routes);
+  App.use("/", routes);
 
   /** Error handling */
-  app.use((req, res) => {
+  App.use((req, res) => {
     const error = "Not found";
 
     Logging.error(error);
@@ -83,10 +84,10 @@ export default function startServer() {
   });
 
   http
-    .createServer(app)
+    .createServer(App)
     .listen(config.server.port, () =>
       Logging.info(`Server is running on port ${config.server.port}`)
     );
 
-  return app;
+    
 }

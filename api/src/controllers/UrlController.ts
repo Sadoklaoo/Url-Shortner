@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
-import url from "../models/url";
+import { Url } from "../models/url";
 
 class UrlController {
   static shorten = async (req: Request, res: Response) => {
@@ -8,7 +8,7 @@ class UrlController {
     const { full } = req.body;
 
     //new shortenUrl created
-    const shortUrl = new url({
+    const shortUrl = new Url({
       _id: new mongoose.Types.ObjectId(),
       full: full,
     });
@@ -29,7 +29,7 @@ class UrlController {
     const shortURL = req.params.shortURL;
 
     // look for user by shortUrl in Database
-    url.findOne({ short: shortURL }).then((URL) => {
+    Url.findOne({ short: shortURL }).then((URL) => {
       // check if url is not empty
       if (URL != null) {
         //redirect

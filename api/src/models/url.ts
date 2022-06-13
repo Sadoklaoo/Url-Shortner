@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 import shortId from "shortid";
 export interface IUrl {
   full: string;
@@ -20,4 +20,7 @@ const urlSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model<IUrlModel>("Url", urlSchema);
+export const Url: Model<IUrlModel> = mongoose.model<IUrlModel>(
+  "Url",
+  urlSchema
+);
