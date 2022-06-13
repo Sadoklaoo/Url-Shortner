@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import * as bcrypt from "bcrypt";
 export interface IUser {
   email: string;
@@ -7,7 +7,7 @@ export interface IUser {
 
 export interface IUserModel extends IUser, Document {}
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema<IUser>({
   email: {
     type: String,
     required: true,

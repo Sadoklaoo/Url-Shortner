@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import mongoose from "mongoose";
 import url from "../models/url";
 
 class UrlController {
-  static shorten = async (req: Request, res: Response, next: NextFunction) => {
+  static shorten = async (req: Request, res: Response) => {
     // get full url
     const { full } = req.body;
 
@@ -24,7 +24,7 @@ class UrlController {
     );
   };
 
-  static redirect = async (req: Request, res: Response, next: NextFunction) => {
+  static redirect = async (req: Request, res: Response) => {
     // Get shortURL
     const shortURL = req.params.shortURL;
 

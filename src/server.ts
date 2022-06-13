@@ -10,7 +10,11 @@ const app = express();
 
 // Connect mongoose
 mongoose
-  .connect(config.mongo.url)
+  .connect(config.mongo.url, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     Logging.info("Database Connected");
     StartServer();
@@ -65,13 +69,13 @@ const StartServer = () => {
   app.use("/", routes);
 
   /** Error handling */
-  app.use((req, res, next) => {
-    const error = new Error("Not found");
+  app.use((req, res) => {
+    const error = "Not found";
 
     Logging.error(error);
 
     res.status(404).json({
-      message: error.message,
+      message: error,
     });
   });
 

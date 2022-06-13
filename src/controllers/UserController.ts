@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import user from "../models/user";
 import * as bcrypt from "bcrypt";
 class UserController {
@@ -31,7 +31,7 @@ class UserController {
     });
   };
 
-  static create = async (req: Request, res: Response, next: NextFunction) => {
+  static create = async (req: Request, res: Response) => {
     // get credentials
     const { email, password } = req.body;
 
