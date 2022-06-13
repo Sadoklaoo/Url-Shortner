@@ -1,19 +1,17 @@
 # Url-Shortner Backend Challenge
 
-In this challenge, we will create a URL Shortener API which can create and retrieve data from MongoDB.
+In this challenge, we will create a URL Shortener API using NodeJS, Express which will allow user to create an account and login as well as shorten URLs and using it to redirect. All data will be stored in a MongoDB.   
 
 # Table of contents:
 
 - [Pre-reqs](#pre-reqs)
 - [Getting started](#getting-started)
-- [Online Database](#online-database)
-  - [Pre-reqs](#Prerequisites)
-  - [Create a managed MongoDB with Atlas](#create-a-managed-mongoDB-with-atlas)
-- [Build the app](#build-the-app)
+- [Build the app with Docker](#build-the-app-with-docker)
 - [ESLint](#eslint)
 - [Dependencies](#dependencies)
   - [`dependencies`](#dependencies)
   - [`devDependencies`](#devdependencies)
+- [Future Tasks](#future-tasks)
 
 # Pre-reqs
 
@@ -22,6 +20,7 @@ To build and run this app locally you will need a few things:
 - Install [Node.js](https://nodejs.org/en/)
 - Install [MongoDB](https://docs.mongodb.com/manual/installation/)
 - Install [VS Code](https://code.visualstudio.com/)
+- Install [Docker](https://www.docker.com/get-started/)
 
 # Getting started
 
@@ -65,55 +64,41 @@ mongod --dbpath ~/data/db
 
 ```
 
-# build and run
+# build 
 npm run build
 
 # run dev mode
-npm start
+npm run dev
 ```
 
-# Online Database
 
-For local development, running MongoDB on localhost is fine, however we can use a database with high availability.
 
-## Prerequisites
+# Build the app with Docker
 
-- **Create a cloud database** -
-  The easiest way to achieve this is by using a managed cloud database.
-  There are many different providers, but the easiest one to get started with is [MongoDB Atlas](#create-a-managed-mongodb-with-atlas).
+To be able to build the app using Docker just use the following commands after cloning the project:
 
-### Create a managed MongoDB with Atlas
+```bash
 
-1. Navigate to [MongoDB's website](https://www.mongodb.com/cloud/atlas), sign up for a free account, and then log in.
-2. After creating the account, enter the organization name, project name, and select your preferred language (JavaScript).
-3. Select the **Shared Cluster** to get a free version with up to 512 MB storage which is great for development purposes.
-4. On the "Create a Starter Cluster" page you can select cloud provider, region, region, cluster tier, and
-   MongoDB settings, like version and backup frequency (Note: there is no option to create backups in the free tier).
-5. If you already know to which cloud provider and region you want to deploy later, you should select the same here for best performance. Otherwise select a region close to the location where you plan to deploy the application later.
-6. Select **M0 Sandbox** as the Cluster Tier, give your cluster a name, and then click the "Create Cluster" button.
-7. It will now take a couple of minutes to create the cluster and you will be redirected to the MongoDB Atlas Admin interface.
-8. Now you must configure access and security before you can use the database.
-9. To whitelist an IP address, go to the **Network Access** section and click the "Add IP Address" button. For local development you can select your current IP address.
-10. Create a user by selecting the **Add New Database User** in Database Access, adding a username and password (Password Authentication method) and give him read and write access to any database within the cluster.
-    A user account is required to connect to the database, so remember these values because you will need them as part of your connection string.
-11. Within the Clusters section, click the **Connect** button in your cluster to connect to the database.
-12. You could now connect to the cluster using [MongoDB Compass](https://www.mongodb.com/products/compass), which is a graphical interface (GUI) to interact with the database.
-13. But we need to select **Connect your application** to get the connection string, it should look like this: `mongodb+srv://<username>:<password>@your-cluster.12abc.mongodb.net/your-database?retryWrites=true&w=majority`
-    and replace `<username>` and `<password>` with the credentials you just created.
-    Back in your project, open your `.env` file and update file with your new connection strings. > NOTE! - If you don't have an `.env` file yet, rename `.env.example` to `.env` and follow the comments to update the values in that file.
-14. **Success!**
-    You can test that it works locally by removing `MONGO_URI`.
-    After rebuilding/serving, the app should work, but users that were previously created in local testing will not exist in the new database!
+docker-compose build 
 
-You can find **more information** about how to get started with Atlas [here](https://docs.atlas.mongodb.com/getting-started/).
+docker-compose run 
 
-### Build the app
+```
 
-Building the app locally is required to generate a zip to deploy because the App Service won't execute build tasks.
-Build the app however you normally would:
+# Testing
+For this project, I chose [Jest](https://facebook.github.io/jest/) as our test framework.
+While Mocha is probably more common, Mocha seems to be looking for a new maintainer and setting up TypeScript testing in Jest is wicked simple.
 
-- `ctrl + shift + b` - kicks off default build in VS Code
-- execute `npm run build` from a terminal window
+## Install the components
+To add TypeScript + Jest support, first install a few npm packages:
+```
+npm install -D jest ts-jest
+```
+`jest` is the testing framework itself, and `ts-jest` is just a simple function to make running TypeScript tests a little easier.
+
+## Running tests
+Simply run `npm run test`.
+Note this will also generate a coverage report.
 
 # ESLint
 
@@ -146,25 +131,37 @@ In that file you'll find two sections:
 
 ## `dependencies`
 
-| Package     | Description                                              |
-| ----------- | -------------------------------------------------------- |
-| async       | Utility library that provides asynchronous control flow. |
-| bcrypt      | Library for hashing and salting user passwords.          |
-| body-parser | Express 4 middleware.                                    |
-| dotenv      | Loads environment variables from .env file.              |
-| express     | Node.js web framework.                                   |
-| mongoose    | MongoDB ODM.                                             |
-| http        | Simplified HTTP request library.                         |
-| shortid     | Creates amazingly short non-sequential unique ids.       |
-| ts-node-dev | TypeScript execution engine and REPL for Node.js.        |
+| Package       | Description                                              |
+| ------------- | -------------------------------------------------------- |
+| async         | Utility library that provides asynchronous control flow. |
+| bcrypt        | Library for hashing and salting user passwords.          |
+| body-parser   | Express 4 middleware.                                    |
+| dotenv        | Loads environment variables from .env file.              |
+| express       | Node.js web framework.                                   |
+| mongoose      | MongoDB ODM.                                             |
+| connect-mongo | MongoDB session store for Express and Connect.           |
+| http          | Simplified HTTP request library.                         |
+| shortid       | Creates amazingly short non-sequential unique ids.       |
+| ts-node-dev   | TypeScript execution engine and REPL for Node.js.        |
 
 ## `devDependencies`
 
-| Package    | Description                                                            |
-| ---------- | ---------------------------------------------------------------------- |
-| @types     | Dependencies in this folder are `.d.ts` files used to provide types    |
-| ts-node    | Enables directly running TS files. Used to run `copy-static-assets.ts` |
-| eslint     | Linter for JavaScript and TypeScript files                             |
-| typescript | JavaScript compiler/type checker that boosts JavaScript productivity   |
+| Package              | Description                                                            |
+| -------------------- | ---------------------------------------------------------------------- |
+| @types               | Dependencies in this folder are `.d.ts` files used to provide types    |
+| ts-node              | Enables directly running TS files. Used to run `copy-static-assets.ts` |
+| eslint               | Linter for JavaScript and TypeScript files                             |
+| eslint-config-google | ESLint shareable config for the Google style.                          |
+| typescript           | JavaScript compiler/type checker that boosts JavaScript productivity   |
+| jest                 | Complete and ready to set-up JavaScript testing solution.              |
+| ts-jest              | ts-jest can be used to test TypeScript code.                           |
 
 To install or update these dependencies you can use `npm install` or `npm update`.
+
+# Future Tasks
+For the next update I will cover :
+- JWT Authentication to cover routes accessibility.
+- Email Regex Validation.
+- Redirect and Login Test Validation.
+
+
