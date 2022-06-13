@@ -2,22 +2,24 @@ version: "3.1"
 
 services:
   db:
-    container_name: mongoDB
     image: mongo:latest
     restart: always
     volumes:
-      - ./data:/data/db
+      - ./data:/db/shortcut
     ports:
       - 27017:27017
   web:
-    build: .
+    build:
+      dockerfile: Dockerfile
+      context : ./api
     ports:
       - 3000:3000
     volumes:
-      - .:/usr/src/app
+      - /app/node_modules
+      - ./api:/app
     command: npm run start
-    links:
-      - db
+    environment: 
+    - MONGO_URI_LOCAL=mongodb://db:27017/test
     restart: on-failure
     depends_on:
       - db
