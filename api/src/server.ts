@@ -5,19 +5,19 @@ import mongoose from "mongoose";
 import { config } from "./config/config";
 import Logging from "./library/Logging";
 
-// Create a new express application instance
-const app = express();
-
 // Connect mongoose
+mongoose.Promise = global.Promise;
 mongoose
   .connect(config.mongo.url, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000,
+    useFindAndModify: false,
   })
   .then(() => {
     Logging.info("Database Connected");
-    StartServer();
+    startServer();
   })
   .catch((error) => {
     Logging.error("Unable to connect : ");
@@ -25,7 +25,10 @@ mongoose
   });
 
 /** Only Start Server if Mongoose Connects */
-const StartServer = () => {
+export default function startServer() {
+  // Create a new express application instance
+  const app = express();
+
   /** Log the request */
   app.use((req, res, next) => {
     /** Log the req */
@@ -84,4 +87,6 @@ const StartServer = () => {
     .listen(config.server.port, () =>
       Logging.info(`Server is running on port ${config.server.port}`)
     );
-};
+
+  return app;
+}

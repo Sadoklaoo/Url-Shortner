@@ -4,7 +4,11 @@ dotenv.config();
 
 const MONGO_USERNAME = process.env.MONGO_USERNAME || "";
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD || "";
-const MONGO_URL = process.env.MONGO_URL || process.env.MONGODB_URI_LOCAL || "";
+const MONGO_URL =
+  process.env.MONGO_URI_LOCAL ||
+  process.env.MONGO_URL ||
+  process.env.MONGO_URI_LOCAL ||
+  "";
 
 const SERVER_PORT = process.env.SERVER_PORT
   ? Number(process.env.SERVER_PORT)
